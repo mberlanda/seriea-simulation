@@ -1,0 +1,4 @@
+name = "seriea_sim"
+uuid = "339c4e2f-86c2-4d26-8ec4-8e669ea5ef8d"
+authors = ["Mauro Berlanda <mauro.berlanda@gmail.com>"]
+version = "0.1.0"
