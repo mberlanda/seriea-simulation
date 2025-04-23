@@ -10,7 +10,9 @@ import seriea_sim as SerieA
 global_logger(ConsoleLogger())
 
 # Load fixtures from CSV
-fixtures = SerieA.load_fixtures("data/fixtures.csv")
+# https://fixturedownload.com/results/serie-a-2024
+# fixtures = SerieA.load_fixtures("data/fixtures.csv")
+fixtures = SerieA.load_fixtures("data/serie-a-2024-UTC.csv"; mode=:csv)
 @info "Fixtures loaded: $(length(fixtures)) matches"
 
 # Display first few fixtures

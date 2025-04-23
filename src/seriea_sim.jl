@@ -2,16 +2,22 @@ module seriea_sim
 
 using DataFrames, CSV, Logging
 include("match.jl")
-using .match: Match, parse_match
+using .match: Match, parse_match, parse_match_from_csv
 
 export Match, load_fixtures, compute_standings
 
-function load_fixtures(file::String)
+function load_fixtures(file::String; mode::Symbol = :default)
     df = CSV.read(file, DataFrame)
     matches = Match[]
 
     for row in eachrow(df)
-        push!(matches, parse_match(row))
+        if mode == :default
+            push!(matches, parse_match(row))
+        elseif mode == :csv
+            push!(matches, parse_match_from_csv(row))
+        else
+            throw(ArgumentError("Invalid mode: $mode. Use :default or :csv."))
+        end
     end
 
     return matches

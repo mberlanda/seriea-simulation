@@ -1,6 +1,6 @@
 using Test
 include("../src/match.jl")
-using .match: Match, parse_match
+using .match: Match, parse_match, parse_match_from_csv
 
 @testset "parse_match tests" begin
     @testset "Valid match data" begin
@@ -42,6 +42,56 @@ using .match: Match, parse_match
         @test match.round == 4
         @test match.home == "TeamG"
         @test match.away == "TeamH"
+        @test match.hgoals === missing
+        @test match.agoals === missing
+        @test match.outcome === missing
+    end
+end
+
+@testset "parse_match_from_csv tests" begin
+    @testset "Valid match data" begin
+        row = Dict(
+            "Round Number" => "1",
+            "Home Team" => "Genoa",
+            "Away Team" => "Inter",
+            "Result" => "2 - 2"
+        )
+        match = parse_match_from_csv(row)
+        @test match.round == 1
+        @test match.home == "Genoa"
+        @test match.away == "Inter"
+        @test match.hgoals == 2
+        @test match.agoals == 2
+        @test match.outcome == "D"
+    end
+
+    @testset "Missing result data" begin
+        row = Dict(
+            "Round Number" => "2",
+            "Home Team" => "Parma",
+            "Away Team" => "Fiorentina",
+            "Result" => missing
+        )
+        match = parse_match_from_csv(row)
+        @test match.round == 2
+        @test match.home == "Parma"
+        @test match.away == "Fiorentina"
+        @test match.hgoals === missing
+        @test match.agoals === missing
+        @test match.outcome === missing
+    end
+
+    @testset "Invalid result format" begin
+        row = Dict(
+            "Round Number" => "3",
+            "Home Team" => "Empoli",
+            "Away Team" => "Monza",
+            "Result" => "invalid"
+        )
+        match = parse_match_from_csv(row)
+        @test match.round == 3
+        @test match.home == "Empoli"
+        @test match.away == "Monza"
         @test match.hgoals === missing
         @test match.agoals === missing
         @test match.outcome === missing
